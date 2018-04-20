@@ -34,7 +34,7 @@ void run_program(const unsigned int vector_size_guess,
   const unsigned int n_cells_tot = std::max(vector_size_guess / Utilities::pow(degree+1,dim),
                                             1U);
   unsigned int n_cells[dim];
-  n_cells[0] = std::max(static_cast<unsigned int>(std::pow((double)n_cells_tot, 1./dim))
+  n_cells[0] = std::max(static_cast<unsigned int>(1.00001*std::pow((double)n_cells_tot, 1./dim))
                         /VectorizedArray<Number>::n_array_elements,
                         1U)*VectorizedArray<Number>::n_array_elements;
   if (dim > 2)

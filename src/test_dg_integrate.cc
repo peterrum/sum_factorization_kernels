@@ -16,7 +16,7 @@
 #endif
 
 const unsigned int min_degree = 3;
-const unsigned int max_degree = 3;
+const unsigned int max_degree = 6;
 const unsigned int dimension = 3;
 typedef double value_type;
 //#define DO_BLOCK_SIZE_TEST
@@ -34,7 +34,7 @@ void run_program(const unsigned int vector_size_guess,
   const unsigned int n_cells_tot = std::max(vector_size_guess / Utilities::pow(degree+1,dim),
                                             1U);
   unsigned int n_cells[dim];
-  n_cells[0] = std::max(static_cast<unsigned int>(std::pow((double)n_cells_tot, 1./dim))
+  n_cells[0] = std::max(static_cast<unsigned int>(1.00001*std::pow((double)n_cells_tot, 1./dim))
                         /VectorizedArray<Number>::n_array_elements,
                         1U)*VectorizedArray<Number>::n_array_elements;
   if (dim > 2)
@@ -45,8 +45,8 @@ void run_program(const unsigned int vector_size_guess,
   else
     n_cells[1] = std::max(n_cells_tot/n_cells[0], 1U);
   evaluator.blx = 3;//2048 / evaluator.dofs_per_cell;
-  evaluator.bly = 9;
-  evaluator.blz = 6;
+  evaluator.bly = std::max(1, 25/degree);
+  evaluator.blz = std::max(1, 18/degree);
   evaluator.initialize(n_cells);
 
   std::size_t local_size = evaluator.n_elements()*evaluator.dofs_per_cell;
@@ -73,7 +73,7 @@ void run_program(const unsigned int vector_size_guess,
 
   double best_avg = std::numeric_limits<double>::max();
 
-  for (unsigned int i=0; i<3; ++i)
+  for (unsigned int i=0; i<5; ++i)
     {
       MPI_Barrier(MPI_COMM_WORLD);
 
@@ -106,11 +106,15 @@ void run_program(const unsigned int vector_size_guess,
     {
       const std::size_t mem_transfer = global_size * sizeof(Number) *
         2 * n_tests;
+      const std::size_t ops_interpolate = (/*add*/2*((degree+1)/2)*2 +
+                                           /*mult*/degree+1 +
+                                           /*fma*/2*((degree-1)*(degree+1)/2));
       const std::size_t ops_approx = global_size / evaluator.dofs_per_cell
-        * ((1<<dim) * (/*add*/2*((degree+1)/2)*2 +
-                       /*mult*/degree+1 +
-                       /*fma*/2*((degree-1)*(degree+1)/2))*Utilities::pow(degree+1,dim-1)
-           + 2*dim * 6 * Utilities::pow(degree+1,dim-1)) * n_tests;
+        * (4 * dim * ops_interpolate * Utilities::pow(degree+1,dim-1)
+           + 2 * dim * 2 * Utilities::pow(degree+1,dim-1)
+           + 2*dim * 4 * ops_interpolate * Utilities::pow(degree+1,dim-2)
+           + 2*dim * 2 * (degree+1 + 2*(degree+1) + 4) * Utilities::pow(degree+1,dim-1) +
+           + 2*dim * 12) * n_tests;
       std::cout << "Degree " << std::setw(2) << degree << "  ";
       for (unsigned int d=0; d<dim; ++d)
         std::cout << n_cells[d] << (d<dim-1 ? " x " : "");

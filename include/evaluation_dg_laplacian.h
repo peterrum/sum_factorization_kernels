@@ -349,7 +349,6 @@ public:
                   const VectorizedArray<Number> outgrad = array_fd[2][i1];
                   const VectorizedArray<Number> avg_grad = 0.5 * inv_jac[1] * (array_face[2]+outgrad);
                   const VectorizedArray<Number> jump = array_face[0] - outval;
-                  //std::cout << "y0" << i << " " << array_face[0][0] << " " << array_face[2][0] << std::endl;
                   array_f[2][i1]  = (avg_grad + jump * tauy) * JxW_facey * weight;
                   array_fd[2][i1] = (0.5 * inv_jac[1] * JxW_facey) * jump * weight;
                 }
@@ -358,7 +357,6 @@ public:
                   const VectorizedArray<Number> outgrad = array_fd[3][i1];
                   const VectorizedArray<Number> avg_grad = -0.5 * inv_jac[1] * (array_face[3]+outgrad);
                   const VectorizedArray<Number> jump = array_face[1] - outval;
-                  //std::cout << "y1" << i << " " << array_face[1][0] << " " << array_face[3][0] << std::endl;
                   array_f[3][i1]  = (avg_grad + jump * tauy) * JxW_facey * weight;
                   array_fd[3][i1] = (-0.5 * inv_jac[1] * JxW_facey) * jump * weight;
                 }
@@ -373,7 +371,6 @@ public:
                   const VectorizedArray<Number> outgrad = array_fd[0][i1];
                   const VectorizedArray<Number> avg_grad = 0.5 * inv_jac[0] * (array_face[2]+outgrad);
                   const VectorizedArray<Number> jump = array_face[0] - outval;
-                  //std::cout << "x0" << i << " " << array_face[0][0] << " " << array_face[2][0] << std::endl;
                   array_f[0][i1]  = (avg_grad + jump * taux) * JxW_facex * weight;
                   array_fd[0][i1] = (0.5 * inv_jac[0] * JxW_facex) * jump * weight;
                 }
@@ -382,7 +379,6 @@ public:
                   const VectorizedArray<Number> outgrad = array_fd[1][i1];
                   const VectorizedArray<Number> avg_grad = -0.5 * inv_jac[0] * (array_face[3]+outgrad);
                   const VectorizedArray<Number> jump = array_face[1] - outval;
-                  //std::cout << "x1" << i << " " << array_face[1][0] << " " << array_face[3][0] << std::endl;
                   array_f[1][i1]  = (avg_grad + jump * taux) * JxW_facex * weight;
                   array_fd[1][i1] = (-0.5 * inv_jac[0] * JxW_facex) * jump * weight;
                 }
@@ -396,7 +392,6 @@ public:
                 if (dim>2)
                   array_2_ptr[q] *= (inv_jac[2]*inv_jac[2]*my_jxw)*quadrature_ptr[q];
               }
-
             for (unsigned int i=0; i<degree+1; ++i)
               {
                 const unsigned int i1 = i2*(degree+1)+i;

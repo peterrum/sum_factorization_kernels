@@ -15,7 +15,7 @@
 const unsigned int min_degree = 1;
 const unsigned int max_degree = 20;
 
-const std::size_t  vector_size_guess = 500000;
+const std::size_t  vector_size_guess = 50000000;
 const bool         cartesian         = true;
 const unsigned int n_tests           = 100;
 
