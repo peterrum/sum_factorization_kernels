@@ -15,3 +15,14 @@ year =
 
 Parts of the implementation have been taken from the deal.II finite element,
 github.com/dealii/dealii.
+
+
+# Perfomance tests
+
+## gprof
+
+```
+./test_dg_precomputed_gprof
+gprof ./test_dg_precomputed_gprof > out
+vim out
+```
