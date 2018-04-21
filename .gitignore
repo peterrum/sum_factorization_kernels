@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 build
+build2
 **~
 
 # Compiled Object files
